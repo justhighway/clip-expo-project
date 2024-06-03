@@ -2,6 +2,7 @@
   "expo": {
     "name": "clip-expo",
     "slug": "clip-expo",
+    "scheme": "clip-expo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
