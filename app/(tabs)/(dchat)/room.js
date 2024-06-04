@@ -1,59 +1,38 @@
-import React, { useEffect, useState, useRef } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  FlatList,
-  StyleSheet,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, TextInput, Button, FlatList } from "react-native";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 
-const ChatRoom = () => {
+export default function Chat() {
+  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const ws = useRef(null);
+  const [client, setClient] = useState(null);
 
   useEffect(() => {
-    ws.current = new WebSocket("ws://15.165.40.73:8080/ws");
+    const socket = new SockJS("ws://15.165.40.73:8080/ws");
+    const stompClient = Stomp.over(socket);
 
-    ws.current.onopen = () => {
-      console.log("WebSocket connection opened");
-    };
+    stompClient.connect({}, () => {
+      stompClient.subscribe("/topic/messages", (msg) => {
+        const newMessage = JSON.parse(msg.body);
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      });
+    });
 
-    ws.current.onmessage = (e) => {
-      console.log("Message received from server:", e.data);
-      const newMessage = JSON.parse(e.data);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { ...newMessage, type: "received" },
-      ]);
-    };
-
-    ws.current.onerror = (e) => {
-      console.error("WebSocket error:", e.message);
-    };
-
-    ws.current.onclose = (e) => {
-      console.log("WebSocket connection closed");
-    };
+    setClient(stompClient);
 
     return () => {
-      ws.current.close();
+      if (client) {
+        client.disconnect();
+      }
     };
   }, []);
 
   const sendMessage = () => {
-    if (ws.current.readyState === WebSocket.OPEN) {
-      const message = {
-        text: input,
-        timestamp: new Date().toISOString(),
-        type: "sent",
-      };
-      ws.current.send(JSON.stringify(message));
-      setMessages((prevMessages) => [...prevMessages, message]);
-      setInput("");
-    } else {
-      console.error("WebSocket is not open");
+    if (client && message.trim()) {
+      const msg = { content: message, sender: "User" };
+      client.send("/app/chat", {}, JSON.stringify(msg));
+      setMessage("");
     }
   };
 
@@ -61,64 +40,20 @@ const ChatRoom = () => {
     <View style={{ flex: 1, padding: 16 }}>
       <FlatList
         data={messages}
-        keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
-          <View
-            style={[
-              styles.messageContainer,
-              item.type === "sent"
-                ? styles.sentMessage
-                : styles.receivedMessage,
-            ]}
-          >
-            <Text style={styles.messageText}>{item.text}</Text>
-            <Text style={styles.timestamp}>
-              {new Date(item.timestamp).toLocaleTimeString()}
-            </Text>
-          </View>
+          <Text>
+            {item.sender}: {item.content}
+          </Text>
         )}
+        keyExtractor={(item, index) => index.toString()}
       />
       <TextInput
-        value={input}
-        onChangeText={setInput}
+        value={message}
+        onChangeText={setMessage}
         placeholder="Type a message"
-        style={styles.input}
+        style={{ borderWidth: 1, padding: 8, marginVertical: 16 }}
       />
       <Button title="Send" onPress={sendMessage} />
     </View>
   );
-};
-
-const styles = StyleSheet.create({
-  messageContainer: {
-    padding: 10,
-    borderRadius: 10,
-    marginVertical: 5,
-    maxWidth: "80%",
-  },
-  sentMessage: {
-    alignSelf: "flex-end",
-    backgroundColor: "#dcf8c6",
-  },
-  receivedMessage: {
-    alignSelf: "flex-start",
-    backgroundColor: "#ffffff",
-  },
-  messageText: {
-    fontSize: 16,
-  },
-  timestamp: {
-    fontSize: 10,
-    color: "#aaa",
-    textAlign: "right",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  },
-});
-
-export default ChatRoom;
+}
