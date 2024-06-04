@@ -9,7 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 export default function TabsLayout() {
   return (
     <Tabs
-      initialRouteName="(home)"
+      initialRouteName="(ahome)"
       screenOptions={{
         tabBarStyle: {
           borderTopWidth: 0,
@@ -23,7 +23,7 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="(home)"
+        name="(ahome)"
         options={{
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="cards" size={28} color={color} />
@@ -31,7 +31,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="(community)"
+        name="(bcommunity)"
         options={{
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="space-dashboard" size={28} color={color} />
@@ -39,7 +39,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="(add)"
+        name="(cadd)"
         options={{
           tabBarIcon: () => (
             <View style={style.add}>
@@ -49,7 +49,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="(chat)"
+        name="(dchat)"
         options={{
           tabBarIcon: ({ color }) => (
             <Ionicons name="chatbox" size={28} color={color} />
@@ -58,7 +58,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="(profile)"
+        name="(eprofile)"
         options={{
           tabBarIcon: ({ color }) => (
             <FontAwesome name="user" size={28} color={color} />

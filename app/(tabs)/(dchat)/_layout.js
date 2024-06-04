@@ -4,7 +4,7 @@ export default function ChatLayout() {
   return (
     <Stack>
       <Stack.Screen name="index" />
-      <Stack.Screen name="[roomId]" />
+      <Stack.Screen name="room" options={{ presentation: "card" }} />
     </Stack>
   );
 }

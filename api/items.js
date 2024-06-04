@@ -21,4 +21,15 @@ const getItems = async () => {
   return data;
 };
 
-export { getUserItems, getItems };
+const postItem = async (formData) => {
+  const accessToken = await getSecureStore("accessToken");
+  const response = await axiosInstance.post("items/form-data", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return response.data;
+};
+
+export { getUserItems, getItems, postItem };

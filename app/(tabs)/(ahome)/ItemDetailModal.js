@@ -24,29 +24,34 @@ const ItemDetailModal = () => {
           headerRight: () => (
             <TouchableOpacity>
               <AntDesign
-                name="closesquare"
-                size={36}
+                name="close"
+                size={30}
+                color={colors.BLACK}
                 onPress={() => router.back()}
               />
             </TouchableOpacity>
           ),
         }}
       />
-      <ScrollView>
+      <ScrollView style={styles.container}>
         <View style={styles.imageContainer}>
           {item.itemPictures.map((pic, index) => (
             <Image
               key={index}
               source={{ uri: pic }}
               style={styles.itemImage}
-              resizeMode="cover"
+              resizeMode="contain"
             />
           ))}
         </View>
 
         <View style={styles.infoContainer}>
           <View style={styles.userNameContainer}>
-            <FontAwesome name="user-circle-o" size={26} />
+            <FontAwesome
+              name="user-circle-o"
+              size={24}
+              color={colors.PINK700}
+            />
             <Text style={styles.userNameText}>{item.itemUpLoaderUuid}</Text>
           </View>
 
@@ -83,9 +88,12 @@ const ItemDetailModal = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.WHITE,
+  },
   imageContainer: {
     borderBottomWidth: 1,
-    borderBottomColor: colors.GREY700,
+    borderBottomColor: colors.GREY300,
   },
   itemImage: {
     width: "100%",
@@ -93,7 +101,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     flex: 1,
-    padding: 30,
+    padding: 25,
   },
   userNameContainer: {
     flexDirection: "row",
@@ -106,9 +114,10 @@ const styles = StyleSheet.create({
   userNameText: {
     fontSize: 20,
     marginBottom: 5,
+    color: colors.GREY600,
   },
   titleContainer: {
-    marginVertical: 20,
+    marginVertical: 16,
   },
   subTitleContainer: {
     flexDirection: "row",
@@ -117,15 +126,15 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   titleText: {
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: "bold",
   },
   subTitleText: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: "bold",
   },
   subText: {
-    fontSize: 20,
+    fontSize: 18,
     color: colors.GREY700,
   },
 });

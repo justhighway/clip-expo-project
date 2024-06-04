@@ -18,10 +18,7 @@ export default function ChatList() {
   const router = useRouter();
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.item}
-      onPress={() => router.push(`/chat/${item.id}`)}
-    >
+    <TouchableOpacity style={styles.item} onPress={() => router.push("room")}>
       <Text style={styles.title}>{item.name}</Text>
     </TouchableOpacity>
   );

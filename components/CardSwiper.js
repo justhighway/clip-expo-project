@@ -1,3 +1,4 @@
+// CardSwiper.js:
 import React, { useCallback, useRef, useState, useEffect } from "react";
 import {
   Image,
@@ -6,13 +7,14 @@ import {
   View,
   TouchableWithoutFeedback,
   ActivityIndicator,
-  Button,
+  TouchableOpacity,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Swiper } from "rn-swiper-list";
 import { LinearGradient } from "expo-linear-gradient";
 import { getItems } from "@/api/items"; // getItems API import
 import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function CardSwiper() {
   const ref = useRef();
@@ -20,6 +22,18 @@ export default function CardSwiper() {
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState([]);
   const router = useRouter();
+
+  const conditionMapping = {
+    1: "S",
+    2: "A+",
+    3: "A0",
+    4: "B+",
+    5: "B0",
+    6: "C+",
+    7: "C0",
+    8: "D+",
+    9: "D0",
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -109,17 +123,22 @@ export default function CardSwiper() {
             <View style={styles.cardTextContainer}>
               <Text style={styles.cardTitleText}>{item.itemName}</Text>
               <Text style={styles.cardDetailsText}>
-                {item.itemPrice} · {item.itemDescription}
+                {item.itemPrice.toLocaleString()}원 ·{" "}
+                {conditionMapping[item.itemCondition]}
               </Text>
-              <Button
-                title="View Details"
+            </View>
+            <View style={styles.detailButtonContainer}>
+              <TouchableOpacity
+                style={styles.detailsButton}
                 onPress={() =>
                   router.push({
                     pathname: "ItemDetailModal",
                     params: { item: JSON.stringify(item) },
                   })
                 }
-              />
+              >
+                <Ionicons name="arrow-up" size={30} color="#fff" />
+              </TouchableOpacity>
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -257,6 +276,11 @@ const styles = StyleSheet.create({
     bottom: 40,
     left: 20,
   },
+  detailButtonContainer: {
+    position: "absolute",
+    bottom: 40,
+    right: 20,
+  },
   cardTitleText: {
     fontSize: 32,
     fontWeight: "bold",
@@ -294,5 +318,13 @@ const styles = StyleSheet.create({
   },
   inactiveBar: {
     backgroundColor: "#cccccc",
+  },
+  detailsButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 10,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    borderRadius: 50,
+    padding: 10,
   },
 });

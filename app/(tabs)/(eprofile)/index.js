@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
-import { removeSecureStore } from "@/utils/secureStore";
+import { getSecureStore, removeSecureStore } from "@/utils/secureStore";
 import { useRouter } from "expo-router";
 
 export default function ProfileScreen() {
@@ -12,10 +12,19 @@ export default function ProfileScreen() {
     router.replace("(auth)");
   };
 
+  const getToken = async () => {
+    try {
+      const result = await getSecureStore("accessToken");
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Profile Screen</Text>
       <Button title="로그아웃" onPress={handleLogout} />
+      <Button title="액세스 토큰 확인" onPress={getToken} />
     </View>
   );
 }
