@@ -6,7 +6,7 @@ import { router } from "expo-router";
 export default function BackContainer() {
   return (
     <View style={styles.container}>
-      <TouchableOpacity>
+      <TouchableOpacity style={styles.button}>
         <Ionicons
           name="chevron-back-outline"
           size={30}
@@ -22,5 +22,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     justifyContent: "center",
+    padding: 10,
   },
 });

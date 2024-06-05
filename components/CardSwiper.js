@@ -12,11 +12,11 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Swiper } from "rn-swiper-list";
 import { LinearGradient } from "expo-linear-gradient";
-import { getItems } from "@/api/items"; // getItems API import
+import { getCustomizedItems, getItems } from "@/api/items"; // getItems API import
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function CardSwiper() {
+export default function CardSwiper({ itemSeq }) {
   const ref = useRef();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,7 +38,7 @@ export default function CardSwiper() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await getItems();
+      const response = await getCustomizedItems(itemSeq);
       const items = response.result.data.itemDTOList; // Extract the actual items array
       if (Array.isArray(items)) {
         const formattedItems = items.map((item) => ({

@@ -1,14 +1,30 @@
-// app/(tabs)/(home)/index.js:
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import React from "react";
-import { Stack, useRouter } from "expo-router";
+// app/(tabs)/(ahome)/index.js:
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useState } from "react";
+import {
+  Stack,
+  useFocusEffect,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
 import { Entypo, Octicons } from "@expo/vector-icons";
 import { useHeaderHeight } from "@react-navigation/elements";
 import CardSwiper from "@/components/CardSwiper";
 
 export default function Home() {
+  const [items, setItems] = useState([]);
   const headerHeight = useHeaderHeight();
   const router = useRouter();
+  const { item } = useLocalSearchParams();
+  const parsedItem = item ? JSON.parse(item) : null;
+
+  useFocusEffect(
+    useCallback(() => {
+      if (parsedItem) {
+        console.log("Selected item:", parsedItem.itemSeq);
+      }
+    }, [parsedItem])
+  );
 
   return (
     <>
@@ -35,7 +51,11 @@ export default function Home() {
         }}
       />
       <View style={[styles.container, { paddingTop: headerHeight }]}>
-        <CardSwiper />
+        {item ? (
+          <CardSwiper itemSeq={parsedItem.itemSeq} />
+        ) : (
+          <Text>상품을 선택해주세요</Text>
+        )}
       </View>
     </>
   );

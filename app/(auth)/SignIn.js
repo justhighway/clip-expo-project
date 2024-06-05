@@ -49,43 +49,45 @@ export default function SignInScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <BackContainer />
-      <View style={styles.textContainer}>
-        <Text style={styles.introText}>이메일과 비밀번호로</Text>
-        <Text style={styles.introText}>로그인을 진행합니다.</Text>
+      <View style={styles.subContainer}>
+        <View style={styles.textContainer}>
+          <Text style={styles.introText}>이메일과 비밀번호로</Text>
+          <Text style={styles.introText}>로그인을 진행합니다.</Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <InputField
+            autoFocus
+            placeholder="이메일"
+            error={signIn.errors.username}
+            touched={signIn.touched.username}
+            inputMode="email"
+            returnKeyType="next"
+            blurOnSubmit={false}
+            onSubmitEditing={() => passwordRef.current?.focus()}
+            {...signIn.getTextInputProps("username")}
+          />
+          <InputField
+            ref={passwordRef}
+            placeholder="비밀번호"
+            error={signIn.errors.password}
+            touched={signIn.touched.password}
+            secureTextEntry
+            returnKeyType="join"
+            onSubmitEditing={handleSubmit}
+            {...signIn.getTextInputProps("password")}
+          />
+        </View>
+        {loading ? (
+          <ActivityIndicator size="large" color={colors.PURPLE300} />
+        ) : (
+          <CustomButton
+            label="로그인"
+            variant="filled"
+            size="large"
+            onPress={handleSubmit}
+          />
+        )}
       </View>
-      <View style={styles.inputContainer}>
-        <InputField
-          autoFocus
-          placeholder="이메일"
-          error={signIn.errors.username}
-          touched={signIn.touched.username}
-          inputMode="email"
-          returnKeyType="next"
-          blurOnSubmit={false}
-          onSubmitEditing={() => passwordRef.current?.focus()}
-          {...signIn.getTextInputProps("username")}
-        />
-        <InputField
-          ref={passwordRef}
-          placeholder="비밀번호"
-          error={signIn.errors.password}
-          touched={signIn.touched.password}
-          secureTextEntry
-          returnKeyType="join"
-          onSubmitEditing={handleSubmit}
-          {...signIn.getTextInputProps("password")}
-        />
-      </View>
-      {loading ? (
-        <ActivityIndicator size="large" color={colors.PURPLE300} />
-      ) : (
-        <CustomButton
-          label="로그인"
-          variant="filled"
-          size="large"
-          onPress={handleSubmit}
-        />
-      )}
     </SafeAreaView>
   );
 }
@@ -93,7 +95,9 @@ export default function SignInScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 20,
+  },
+  subContainer: {
+    padding: 20,
   },
   textContainer: {
     marginVertical: 20,

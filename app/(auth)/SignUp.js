@@ -14,6 +14,7 @@ import InputField from "@/components/InputField";
 import { validateSignUp } from "@/utils/validate";
 import { postSignUp } from "@/api/auth";
 import { colors } from "@/constants/colors";
+import BackContainer from "@/components/BackContainer";
 
 function SignUpScreen() {
   const passwordRef = useRef();
@@ -52,50 +53,53 @@ function SignUpScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.textContainer}>
-        <Text style={styles.introText}>이메일과 비밀번호로</Text>
-        <Text style={styles.introText}>회원가입을 진행합니다.</Text>
+      <BackContainer />
+      <View style={styles.subContainer}>
+        <View style={styles.textContainer}>
+          <Text style={styles.introText}>이메일과 비밀번호로</Text>
+          <Text style={styles.introText}>회원가입을 진행합니다.</Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <InputField
+            autoFocus
+            placeholder="이메일"
+            error={signUp.errors.username}
+            touched={signUp.touched.username}
+            inputMode="email"
+            returnKeyType="next"
+            blurOnSubmit={false}
+            onSubmitEditing={() => passwordRef.current?.focus()}
+            {...signUp.getTextInputProps("username")}
+          />
+          <InputField
+            ref={passwordRef}
+            placeholder="비밀번호"
+            textContentType="oneTimeCode"
+            error={signUp.errors.password}
+            touched={signUp.touched.password}
+            secureTextEntry
+            returnKeyType="next"
+            blurOnSubmit={false}
+            onSubmitEditing={() => passwordConfirmRef.current?.focus()}
+            {...signUp.getTextInputProps("password")}
+          />
+          <InputField
+            ref={passwordConfirmRef}
+            placeholder="비밀번호 확인"
+            error={signUp.errors.passwordConfirm}
+            touched={signUp.touched.passwordConfirm}
+            secureTextEntry
+            returnKeyType="join"
+            onSubmitEditing={handleSubmit}
+            {...signUp.getTextInputProps("passwordConfirm")}
+          />
+        </View>
+        {loading ? (
+          <ActivityIndicator size="large" color={colors.PURPLE300} />
+        ) : (
+          <CustomButton label="회원가입" onPress={handleSubmit} />
+        )}
       </View>
-      <View style={styles.inputContainer}>
-        <InputField
-          autoFocus
-          placeholder="이메일"
-          error={signUp.errors.username}
-          touched={signUp.touched.username}
-          inputMode="email"
-          returnKeyType="next"
-          blurOnSubmit={false}
-          onSubmitEditing={() => passwordRef.current?.focus()}
-          {...signUp.getTextInputProps("username")}
-        />
-        <InputField
-          ref={passwordRef}
-          placeholder="비밀번호"
-          textContentType="oneTimeCode"
-          error={signUp.errors.password}
-          touched={signUp.touched.password}
-          secureTextEntry
-          returnKeyType="next"
-          blurOnSubmit={false}
-          onSubmitEditing={() => passwordConfirmRef.current?.focus()}
-          {...signUp.getTextInputProps("password")}
-        />
-        <InputField
-          ref={passwordConfirmRef}
-          placeholder="비밀번호 확인"
-          error={signUp.errors.passwordConfirm}
-          touched={signUp.touched.passwordConfirm}
-          secureTextEntry
-          returnKeyType="join"
-          onSubmitEditing={handleSubmit}
-          {...signUp.getTextInputProps("passwordConfirm")}
-        />
-      </View>
-      {loading ? (
-        <ActivityIndicator size="large" color={colors.PURPLE300} />
-      ) : (
-        <CustomButton label="회원가입" onPress={handleSubmit} />
-      )}
     </SafeAreaView>
   );
 }
@@ -103,7 +107,9 @@ function SignUpScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 20,
+  },
+  subContainer: {
+    padding: 20,
   },
   textContainer: {
     marginVertical: 20,

@@ -59,8 +59,10 @@ export default function BoxModal() {
 
   const handleConfirmSelection = () => {
     if (selectedItem) {
-      console.log("Selected item:", selectedItem);
-      router.back(); // Close the modal
+      router.navigate({
+        pathname: "/(ahome)/",
+        params: { item: JSON.stringify(selectedItem) },
+      });
     } else {
       alert("Please select an item.");
     }

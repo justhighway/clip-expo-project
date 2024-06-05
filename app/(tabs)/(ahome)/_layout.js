@@ -1,18 +1,11 @@
-import { AntDesign } from "@expo/vector-icons";
+// app/(tabs)/(ahome)/_layout.js:
 import { Stack } from "expo-router";
-import { TouchableOpacity } from "react-native";
 
 export default function HomeLayout() {
   return (
     <Stack>
       <Stack.Screen name="index" />
-      <Stack.Screen
-        name="BoxModal"
-        options={{
-          presentation: "modal",
-          headerShown: true,
-        }}
-      />
+      <Stack.Screen name="BoxModal" />
       <Stack.Screen name="AlertModal" options={{ presentation: "modal" }} />
       <Stack.Screen
         name="ItemDetailModal"

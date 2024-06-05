@@ -1,3 +1,5 @@
+// api/items.js
+
 import { getSecureStore } from "@/utils/secureStore";
 import { axiosInstance } from "./axiosInstance";
 
@@ -32,4 +34,16 @@ const postItem = async (formData) => {
   return response.data;
 };
 
-export { getUserItems, getItems, postItem };
+const getCustomizedItems = async (itemSeq) => {
+  const accessToken = await getSecureStore("accessToken");
+  const { data } = await axiosInstance.get(
+    `/items/customized-items/${itemSeq}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+  return data;
+};
+export { getUserItems, getItems, postItem, getCustomizedItems };
