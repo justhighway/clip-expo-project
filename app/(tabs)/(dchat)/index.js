@@ -1,37 +1,12 @@
-import {
-  Alert,
-  Button,
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useEffect, useState, useCallback } from "react";
+// app/(tabs)/(dchat)/index.js
+import React, { useCallback, useEffect, useState } from "react";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { getChatRooms } from "@/api/chat";
 import { useRouter } from "expo-router";
-import { createChatRoom, getChatRooms } from "@/api";
-import { colors } from "@/constants";
 
-export default function ChatListScreen() {
+const ChatRoomList = () => {
   const [chatRooms, setChatRooms] = useState([]);
   const router = useRouter();
-
-  const handleCreateChatRoom = async () => {
-    try {
-      const chatRoom = await createChatRoom({
-        user1: "jaehyeon@gmail.com",
-        user2: "jimin@gmail.com",
-        item1: null,
-        item2: null,
-      });
-      console.log("handleCreateChatRoom => ", chatRoom);
-      // 새로운 채팅방 생성 후 목록을 다시 불러옵니다.
-      fetchChatRooms();
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", "Failed to create chat room");
-    }
-  };
 
   const fetchChatRooms = useCallback(async () => {
     try {
@@ -52,61 +27,35 @@ export default function ChatListScreen() {
     fetchChatRooms();
   }, [fetchChatRooms]);
 
-  return (
-    <View style={styles.container}>
-      <Button title="채팅방 생성" onPress={handleCreateChatRoom} />
-      {chatRooms.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>아직 채팅방이 없네요!</Text>
-          <Text style={styles.emptyText}>물물교환 매칭을 하러가볼까요?</Text>
+  const renderItem = async ({ item }) => {
+    const currentUserEmail = await getUserEmail();
+    const otherUserEmail =
+      item.chatUserUUID1 === currentUserEmail
+        ? item.chatUserUUID2
+        : item.chatUserUUID1;
+
+    return (
+      <TouchableOpacity
+        onPress={() => router.push(`/dchat/${item.chatRoomUUID}`)}
+      >
+        <View>
+          <Text>{otherUserEmail}</Text>
+          <Text>Item 1: {item.chatUserItem1}</Text>
+          <Text>Item 2: {item.chatUserItem2}</Text>
         </View>
-      ) : (
-        <FlatList
-          data={chatRooms}
-          keyExtractor={(item) => item.chatRoomUUID}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.chatRoomContainer}
-              onPress={() => router.push(`room/${item.chatRoomUUID}`)}
-            >
-              <Text style={styles.chatRoomText}>
-                {item.chatUserUUID1} & {item.chatUserUUID2}
-              </Text>
-            </TouchableOpacity>
-          )}
-        />
-      )}
+      </TouchableOpacity>
+    );
+  };
+
+  return (
+    <View>
+      <FlatList
+        data={chatRooms}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.chatRoomUUID}
+      />
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: colors.WHITE,
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  emptyText: {
-    fontSize: 18,
-    color: "gray",
-    textAlign: "center",
-    marginVertical: 5,
-  },
-  chatRoomContainer: {
-    padding: 15,
-    marginVertical: 8,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#fff",
-  },
-  chatRoomText: {
-    fontSize: 16,
-    color: "#333",
-  },
-});
+export default ChatRoomList;

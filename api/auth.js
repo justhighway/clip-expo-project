@@ -19,7 +19,7 @@ const postSignIn = async ({ username, password }) => {
 
 const getProfile = async () => {
   const accessToken = await getSecureStore("accessToken");
-  const { data } = await axiosInstance.get("/members", {
+  const { data } = await axiosInstance.get("/members/", {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -27,7 +27,17 @@ const getProfile = async () => {
   return data;
 };
 
+const getUserEmail = async () => {
+  const accessToken = await getSecureStore("accessToken");
+  const { data } = await axiosInstance.get("/members/", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return data.result.data.username;
+};
+
 // Todo: Secure Store에 저장된 Refresh Token을 불러와서 Header로 넣어주는
 // Todo: getAccessToken API 구현해야함
 
-export { postSignIn, postSignUp, getProfile };
+export { postSignIn, postSignUp, getProfile, getUserEmail };

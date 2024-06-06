@@ -48,15 +48,15 @@ const getCustomizedItems = async (itemSeq) => {
   }
 };
 
-const postLikeAction = async (itemSeq1, itemSeq2, user1, user2) => {
+const postLikeAction = async (user1, user2, item1, item2) => {
   const accessToken = await getSecureStore("accessToken");
   const { data } = await axiosInstance.post(
     `/items/likeAction`,
     {
       likeSenderUUID: user1,
       likeReceiverUUID: user2,
-      likeSenderItemSeq: itemSeq1,
-      likeReceiverItemSeq: itemSeq2,
+      likeSenderItemSeq: item1,
+      likeReceiverItemSeq: item2,
     },
     {
       headers: {

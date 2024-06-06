@@ -11,7 +11,7 @@ export default function ChatLayout() {
         }}
       />
       <Stack.Screen
-        name="Room"
+        name="[chatRoomUUID]"
         options={{
           presentation: "card",
           headerTitleStyle: {

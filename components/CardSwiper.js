@@ -1,4 +1,4 @@
-// components/CardSwiper/CardSwiper.js
+// components/CardSwiper.js
 import React, { useCallback, useRef, useState, useEffect } from "react";
 import {
   StyleSheet,
@@ -11,21 +11,22 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Swiper } from "rn-swiper-list";
 import { LinearGradient } from "expo-linear-gradient";
-import { getCustomizedItems } from "@/api/items";
-import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { getCustomizedItems } from "@/api";
 
+import { Ionicons } from "@expo/vector-icons";
 import { CardImage } from "./cardComponents/CardImage";
 import { BarContainer } from "./cardComponents/BarContainer";
 import { OverlayLabel } from "./cardComponents/OverlayLabel";
-import { conditions } from "@/constants/condition";
+import { conditions } from "@/constants";
+import { useCardSwiper } from "@/hooks";
+import { router } from "expo-router";
 
 const CardSwiper = ({ itemSeq, itemUploaderUuid }) => {
   const ref = useRef();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState([]);
-  const router = useRouter();
+  const { likeAction, dislikeAction, passAction } = useCardSwiper();
 
   const fetchData = async () => {
     setLoading(true);
@@ -121,19 +122,25 @@ const CardSwiper = ({ itemSeq, itemUploaderUuid }) => {
             data={data}
             renderCard={renderCard}
             onSwipeRight={(cardIndex) => {
-              console.log("itemSeq", itemSeq, data[cardIndex].itemSeq);
-              console.log(
-                "itemUploaderUUID",
+              likeAction(
                 itemUploaderUuid,
-                data[cardIndex].itemUpLoaderUuid
+                data[cardIndex].itemUpLoaderUuid,
+                itemSeq,
+                data[cardIndex].itemSeq
               );
             }}
             onSwipedAll={handleSwipeEnd}
-            onSwipeLeft={(cardIndex) => console.log("onSwipeLeft", cardIndex)}
-            onSwipeTop={(cardIndex) => console.log("onSwipeTop", cardIndex)}
-            OverlayLabelRight={() => {
-              <OverlayLabel label="LIKE" color="green" />;
+            onSwipeLeft={(cardIndex) => {
+              dislikeAction();
+              console.log("onSwipeLeft", cardIndex);
             }}
+            onSwipeTop={(cardIndex) => {
+              passAction();
+              console.log("onSwipeTop", cardIndex);
+            }}
+            OverlayLabelRight={() => (
+              <OverlayLabel label="LIKE" color="green" />
+            )}
             OverlayLabelLeft={() => (
               <OverlayLabel label="DISLIKE" color="red" />
             )}
