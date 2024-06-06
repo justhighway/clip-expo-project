@@ -88,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InputField;
+export { InputField };

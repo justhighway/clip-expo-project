@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import useAppState from "./useAppState";
 
-function useUserLocation() {
+const useUserLocation = () => {
   const [userLocation, setUserLocation] = useState({
     latitude: 37.5665,
     longitude: 126.978,
@@ -30,6 +30,6 @@ function useUserLocation() {
   }, [isComeback]);
 
   return { userLocation, isUserLocationError };
-}
+};
 
 export { useUserLocation };

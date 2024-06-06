@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AppState } from "react-native";
 
-function useAppState() {
+const useAppState = () => {
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
   const [isComeback, setIsComeback] = useState(false);
@@ -32,6 +32,6 @@ function useAppState() {
   }, []);
 
   return { appStateVisible, isComeback };
-}
+};
 
 export { useAppState };

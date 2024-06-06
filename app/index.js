@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Redirect } from "expo-router";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
-import { getSecureStore } from "@/utils/secureStore";
+import { getSecureStore } from "@/utils";
 
 export default function Index() {
   const [isSignIn, setIsSignIn] = useState(null);

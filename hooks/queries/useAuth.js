@@ -104,4 +104,4 @@ function useAuth() {
   };
 }
 
-export default useAuth;
+export { useAuth };

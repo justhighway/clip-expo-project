@@ -7,14 +7,11 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-
-import { useForm } from "@/hooks/useForm";
-import CustomButton from "@/components/CustomButton";
-import InputField from "@/components/InputField";
-import { validateSignUp } from "@/utils/validate";
-import { postSignUp } from "@/api/auth";
-import { colors } from "@/constants/colors";
-import BackContainer from "@/components/BackContainer";
+import { useForm } from "@/hooks";
+import { CustomButton, InputField, BackContainer } from "@/components";
+import { colors } from "@/constants";
+import { validateSignUp } from "@/utils";
+import { postSignUp } from "@/api";
 
 function SignUpScreen() {
   const passwordRef = useRef();

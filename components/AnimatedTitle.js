@@ -14,7 +14,7 @@ const AnimatedText = ({ text, isVisible }) => {
   );
 };
 
-export default function AnimatedTitle() {
+const AnimatedTitle = () => {
   const dataArray = [
     "냉장고까지",
     "맥북까지",
@@ -51,7 +51,7 @@ export default function AnimatedTitle() {
       <AnimatedText text={dataArray[currentIndex]} isVisible={isVisible} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {},
@@ -60,3 +60,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+
+export { AnimatedTitle };

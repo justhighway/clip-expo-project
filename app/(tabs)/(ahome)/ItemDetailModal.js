@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useRouter, useLocalSearchParams, Stack } from "expo-router";
 import { AntDesign, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
-import { colors } from "@/constants/colors";
+import { colors } from "@/constants";
 
 const ItemDetailModal = () => {
   const router = useRouter();

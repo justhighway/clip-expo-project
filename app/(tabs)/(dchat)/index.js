@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "expo-router";
-import { createChatRoom, getChatRooms } from "@/api/chat";
-import { colors } from "@/constants/colors";
+import { createChatRoom, getChatRooms } from "@/api";
+import { colors } from "@/constants";
 
 export default function ChatListScreen() {
   const [chatRooms, setChatRooms] = useState([]);
@@ -21,6 +21,8 @@ export default function ChatListScreen() {
       const chatRoom = await createChatRoom({
         user1: "jaehyeon@gmail.com",
         user2: "jimin@gmail.com",
+        item1: null,
+        item2: null,
       });
       console.log("handleCreateChatRoom => ", chatRoom);
       // 새로운 채팅방 생성 후 목록을 다시 불러옵니다.

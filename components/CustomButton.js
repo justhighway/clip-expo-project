@@ -4,11 +4,12 @@ import { colors } from "@/constants/colors";
 
 const deviceHeight = Dimensions.get("screen").height;
 
-export default function CustomButton({
+function CustomButton({
   label,
   variant = "filled",
   size = "large",
   inValid = false,
+  style, // 추가된 스타일 prop
   ...props
 }) {
   return (
@@ -19,6 +20,7 @@ export default function CustomButton({
         pressed ? styles[`${variant}Pressed`] : styles[variant],
         inValid && styles.inValid,
         styles[size], // 크기 스타일 적용
+        style, // 추가된 스타일 적용
       ]}
       {...props}
     >
@@ -54,7 +56,7 @@ const styles = StyleSheet.create({
     opacity: 0.3,
   },
   small: {
-    width: "250%",
+    width: "25%",
     height: 50,
   },
   medium: {
@@ -76,3 +78,5 @@ const styles = StyleSheet.create({
     color: colors.PURPLE700,
   },
 });
+
+export { CustomButton };

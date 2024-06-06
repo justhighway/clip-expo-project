@@ -11,8 +11,8 @@ const ImagePickerButton = ({ onPress }) => (
 
 const styles = StyleSheet.create({
   button: {
-    width: 100,
-    height: 100,
+    width: 150,
+    height: 150,
     backgroundColor: colors.GREY400,
     borderRadius: 5,
     justifyContent: "center",
@@ -20,4 +20,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ImagePickerButton;
+export { ImagePickerButton };

@@ -1,6 +1,6 @@
 // app/(tabs)/(ahome)/index.js:
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import {
   Stack,
   useFocusEffect,
@@ -9,10 +9,10 @@ import {
 } from "expo-router";
 import { Entypo, Octicons } from "@expo/vector-icons";
 import { useHeaderHeight } from "@react-navigation/elements";
-import CardSwiper from "@/components/CardSwiper";
+import { CardSwiper } from "@/components";
+import { colors } from "@/constants";
 
 export default function Home() {
-  const [items, setItems] = useState([]);
   const headerHeight = useHeaderHeight();
   const router = useRouter();
   const { item } = useLocalSearchParams();
@@ -21,7 +21,11 @@ export default function Home() {
   useFocusEffect(
     useCallback(() => {
       if (parsedItem) {
-        console.log("Selected item:", parsedItem.itemSeq);
+        console.log(
+          "Selected item:",
+          parsedItem.itemSeq,
+          parsedItem.itemUpLoaderUuid
+        );
       }
     }, [parsedItem])
   );
@@ -52,7 +56,10 @@ export default function Home() {
       />
       <View style={[styles.container, { paddingTop: headerHeight }]}>
         {item ? (
-          <CardSwiper itemSeq={parsedItem.itemSeq} />
+          <CardSwiper
+            itemSeq={parsedItem.itemSeq}
+            itemUploaderUuid={parsedItem.itemUpLoaderUuid}
+          />
         ) : (
           <Text>상품을 선택해주세요</Text>
         )}
@@ -64,6 +71,6 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: colors.WHITE,
   },
 });

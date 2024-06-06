@@ -1,5 +1,5 @@
 import { axiosInstance } from "./axiosInstance";
-import { getSecureStore } from "@/utils/secureStore";
+import { getSecureStore } from "@/utils";
 
 const postSignUp = async ({ username, password }) => {
   const { data } = await axiosInstance.post("/members/sign-up", {

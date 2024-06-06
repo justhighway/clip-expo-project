@@ -1,9 +1,8 @@
 import React from "react";
 import { SafeAreaView, View, Text, StyleSheet } from "react-native";
 import { router } from "expo-router";
-import { colors } from "@/constants/colors";
-import AnimatedTitle from "@/components/AnimatedTitle";
-import CustomButton from "@/components/CustomButton";
+import { colors } from "@/constants";
+import { AnimatedTitle, CustomButton } from "@/components";
 
 export default function AuthScreen() {
   return (

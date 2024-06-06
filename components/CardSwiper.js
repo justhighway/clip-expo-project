@@ -1,7 +1,6 @@
-// CardSwiper.js:
+// components/CardSwiper/CardSwiper.js
 import React, { useCallback, useRef, useState, useEffect } from "react";
 import {
-  Image,
   StyleSheet,
   Text,
   View,
@@ -12,46 +11,28 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Swiper } from "rn-swiper-list";
 import { LinearGradient } from "expo-linear-gradient";
-import { getCustomizedItems, getItems } from "@/api/items"; // getItems API import
+import { getCustomizedItems } from "@/api/items";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function CardSwiper({ itemSeq }) {
+import { CardImage } from "./cardComponents/CardImage";
+import { BarContainer } from "./cardComponents/BarContainer";
+import { OverlayLabel } from "./cardComponents/OverlayLabel";
+import { conditions } from "@/constants/condition";
+
+const CardSwiper = ({ itemSeq, itemUploaderUuid }) => {
   const ref = useRef();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState([]);
   const router = useRouter();
 
-  const conditionMapping = {
-    1: "S",
-    2: "A+",
-    3: "A0",
-    4: "B+",
-    5: "B0",
-    6: "C+",
-    7: "C0",
-    8: "D+",
-    9: "D0",
-  };
-
   const fetchData = async () => {
     setLoading(true);
     try {
       const response = await getCustomizedItems(itemSeq);
-      const items = response.result.data.itemDTOList; // Extract the actual items array
-      if (Array.isArray(items)) {
-        const formattedItems = items.map((item) => ({
-          ...item,
-          itemPictures: Array.isArray(item.itemPictures)
-            ? item.itemPictures
-            : [item.itemPictures],
-        }));
-        setData(formattedItems);
-        setCurrentImageIndex(Array(formattedItems.length).fill(0));
-      } else {
-        console.error("Fetched data is not an array:", items);
-      }
+      setData(response);
+      setCurrentImageIndex(Array(response.length).fill(0));
     } catch (error) {
       console.error("Failed to fetch items:", error);
     } finally {
@@ -64,9 +45,7 @@ export default function CardSwiper({ itemSeq }) {
   }, []);
 
   const handleImageChange = (itemIndex, direction) => {
-    if (itemIndex >= data.length || itemIndex < 0) {
-      return;
-    }
+    if (itemIndex >= data.length || itemIndex < 0) return;
 
     setCurrentImageIndex((prevState) => {
       const newIndex = [...prevState];
@@ -83,118 +62,52 @@ export default function CardSwiper({ itemSeq }) {
   };
 
   const renderCard = useCallback(
-    (item, index) => {
-      return (
-        <TouchableWithoutFeedback
-          onPress={(e) => {
-            const { locationX } = e.nativeEvent;
-            if (locationX > 200) {
-              handleImageChange(index, "next");
-            } else {
-              handleImageChange(index, "prev");
-            }
-          }}
-        >
-          <View style={styles.cardContainer}>
-            <View style={styles.imageContainer}>
-              <Image
-                source={{ uri: item.itemPictures[currentImageIndex[index]] }}
-                style={styles.cardImage}
-                resizeMode="cover"
-              />
-              <View style={styles.barContainer}>
-                {item.itemPictures.map((_, imgIndex) => (
-                  <View
-                    key={imgIndex}
-                    style={[
-                      styles.bar,
-                      imgIndex === currentImageIndex[index]
-                        ? styles.activeBar
-                        : styles.inactiveBar,
-                    ]}
-                  />
-                ))}
-              </View>
-            </View>
-            <LinearGradient
-              colors={["transparent", "rgba(0,0,0,0.9)"]}
-              style={styles.gradientBottom}
+    (item, index) => (
+      <TouchableWithoutFeedback
+        onPress={(e) => {
+          const { locationX } = e.nativeEvent;
+          handleImageChange(index, locationX > 200 ? "next" : "prev");
+        }}
+      >
+        <View style={styles.cardContainer}>
+          <View style={styles.imageContainer}>
+            <CardImage uri={item.itemPictures[currentImageIndex[index]]} />
+            <BarContainer
+              itemPictures={item.itemPictures}
+              currentImageIndex={currentImageIndex[index]}
             />
-            <View style={styles.cardTextContainer}>
-              <Text style={styles.cardTitleText}>{item.itemName}</Text>
-              <Text style={styles.cardDetailsText}>
-                {item.itemPrice.toLocaleString()}원 ·{" "}
-                {conditionMapping[item.itemCondition]}
-              </Text>
-            </View>
-            <View style={styles.detailButtonContainer}>
-              <TouchableOpacity
-                style={styles.detailsButton}
-                onPress={() =>
-                  router.push({
-                    pathname: "ItemDetailModal",
-                    params: { item: JSON.stringify(item) },
-                  })
-                }
-              >
-                <Ionicons name="arrow-up" size={30} color="#fff" />
-              </TouchableOpacity>
-            </View>
           </View>
-        </TouchableWithoutFeedback>
-      );
-    },
+          <LinearGradient
+            colors={["transparent", "rgba(0,0,0,0.9)"]}
+            style={styles.gradientBottom}
+          />
+          <View style={styles.cardTextContainer}>
+            <Text style={styles.cardTitleText}>{item.itemName}</Text>
+            <Text style={styles.cardDetailsText}>
+              {item.itemPrice.toLocaleString()}원 ·{" "}
+              {conditions[item.itemCondition]}
+            </Text>
+          </View>
+          <View style={styles.detailButtonContainer}>
+            <TouchableOpacity
+              style={styles.detailsButton}
+              onPress={() =>
+                router.push({
+                  pathname: "ItemDetailModal",
+                  params: { item: JSON.stringify(item) },
+                })
+              }
+            >
+              <Ionicons name="arrow-up" size={30} color="#fff" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    ),
     [currentImageIndex, data, router]
   );
 
-  const OverlayLabelRight = useCallback(() => {
-    return (
-      <View
-        style={[
-          styles.overlayLabelContainer,
-          {
-            backgroundColor: "green",
-          },
-        ]}
-      >
-        <Text style={styles.overlayLabelText}>LIKE</Text>
-      </View>
-    );
-  }, []);
-
-  const OverlayLabelLeft = useCallback(() => {
-    return (
-      <View
-        style={[
-          styles.overlayLabelContainer,
-          {
-            backgroundColor: "red",
-          },
-        ]}
-      >
-        <Text style={styles.overlayLabelText}>DISLIKE</Text>
-      </View>
-    );
-  }, []);
-
-  const OverlayLabelTop = useCallback(() => {
-    return (
-      <View
-        style={[
-          styles.overlayLabelContainer,
-          {
-            backgroundColor: "blue",
-          },
-        ]}
-      >
-        <Text style={styles.overlayLabelText}>PASS</Text>
-      </View>
-    );
-  }, []);
-
-  const handleSwipeEnd = useCallback(() => {
-    fetchData(); // Re-fetch data when all cards are swiped
-  }, []);
+  const handleSwipeEnd = useCallback(fetchData, []);
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -208,18 +121,23 @@ export default function CardSwiper({ itemSeq }) {
             data={data}
             renderCard={renderCard}
             onSwipeRight={(cardIndex) => {
-              console.log("onSwipeRight", cardIndex);
+              console.log("itemSeq", itemSeq, data[cardIndex].itemSeq);
+              console.log(
+                "itemUploaderUUID",
+                itemUploaderUuid,
+                data[cardIndex].itemUpLoaderUuid
+              );
             }}
             onSwipedAll={handleSwipeEnd}
-            onSwipeLeft={(cardIndex) => {
-              console.log("onSwipeLeft", cardIndex);
+            onSwipeLeft={(cardIndex) => console.log("onSwipeLeft", cardIndex)}
+            onSwipeTop={(cardIndex) => console.log("onSwipeTop", cardIndex)}
+            OverlayLabelRight={() => {
+              <OverlayLabel label="LIKE" color="green" />;
             }}
-            onSwipeTop={(cardIndex) => {
-              console.log("onSwipeTop", cardIndex);
-            }}
-            OverlayLabelRight={OverlayLabelRight}
-            OverlayLabelLeft={OverlayLabelLeft}
-            OverlayLabelTop={OverlayLabelTop}
+            OverlayLabelLeft={() => (
+              <OverlayLabel label="DISLIKE" color="red" />
+            )}
+            OverlayLabelTop={() => <OverlayLabel label="PASS" color="blue" />}
           />
         ) : (
           <Text>No items available</Text>
@@ -227,7 +145,7 @@ export default function CardSwiper({ itemSeq }) {
       </View>
     </GestureHandlerRootView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -328,3 +246,5 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
+
+export { CardSwiper };

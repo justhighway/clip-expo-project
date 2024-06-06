@@ -1,4 +1,4 @@
-function mergeRefs(...refs) {
+const mergeRefs = (...refs) => {
   return (node) => {
     refs.forEach((ref) => {
       if (typeof ref === "function") {
@@ -8,6 +8,6 @@ function mergeRefs(...refs) {
       }
     });
   };
-}
+};
 
 export { mergeRefs };

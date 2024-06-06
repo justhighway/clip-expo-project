@@ -13,12 +13,13 @@ import {
   Platform,
   ActivityIndicator,
 } from "react-native";
-import { getUserItems } from "@/api/items";
+import { getUserItems } from "@/api";
 import { Stack, useRouter } from "expo-router";
 import {
   GestureHandlerRootView,
   Swipeable,
 } from "react-native-gesture-handler";
+import { conditions } from "@/constants";
 
 export default function BoxModal() {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -131,7 +132,7 @@ export default function BoxModal() {
             {item.itemPrice.toLocaleString("ko-KR")} 원
           </Text>
           <Text style={styles.itemCondition}>
-            {conditionMapping[item.itemCondition]}
+            {conditions[item.itemCondition - 1]}
           </Text>
         </View>
       </TouchableOpacity>

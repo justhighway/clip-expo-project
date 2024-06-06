@@ -3,7 +3,7 @@ import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 
-export default function BackContainer() {
+const BackContainer = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button}>
@@ -15,7 +15,7 @@ export default function BackContainer() {
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -25,3 +25,5 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
+
+export { BackContainer };
